@@ -1,0 +1,60 @@
+.nav-pills-custom li a {
+    background: #efefef;
+    display: inline-block;
+    margin-right: 5px;
+    min-width: 150px;
+    outline: none;
+    padding: 10px 40px 10px;
+    position: relative;
+    text-decoration: none;
+}
+
+.nav-pills-custom li.active a {
+    background: #ff960f !important;
+    color: #fff;
+}
+
+.nav-pills-custom li.active a:after {
+    border-left: 21px solid #ff960f;
+}
+
+.nav-pills-custom li a:before {
+    width: 0;
+    height: 0;
+    border-top: 20px inset transparent;
+    border-bottom: 20px inset transparent;
+    border-left: 20px solid #fff;
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+}
+
+.nav-pills-custom a:after {
+    width: 0;
+    height: 0;
+    border-top: 20px inset transparent;
+    border-bottom: 20px inset transparent;
+    border-left: 21px solid #efefef;
+    position: absolute;
+    content: "";
+    top: 0;
+    right: -20px;
+    z-index: 2;
+}
+
+.nav-pills-custom li:first-child a:before, .nav-pills-custom li:last-child a:after {
+    border: none;
+}
+
+.nav-pills-custom li:first-child a {
+    -webkit-border-radius: 8px 0 0 0px;
+    -moz-border-radius: 8px 0 0 0px;
+    border-radius: 8px 0 0 0px;
+}
+
+.nav-pills-custom li:last-child a {
+    -webkit-border-radius: 0 8px 0px 0;
+    -moz-border-radius: 0 8px 0px 0;
+    border-radius: 0 8px 0px 0;
+}
