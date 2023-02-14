@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Conference;
 use App\Http\Requests\OtpVerify;
 use Request;
 use App\Models\Application;
@@ -30,7 +31,8 @@ class HomeController extends Controller
             $applications = $application->where("student_id", auth("student")->id());
         }
         $applications = $application->paginate(100);
-        return view('home', compact("applications"));
+        $conference = Conference::where('user_id',auth()->user()->id)->first();
+        return view('home', compact("applications","conference"));
     }
     public function verifyOTP(OtpVerify $request)
     {

@@ -35,8 +35,14 @@
 							<a href="#" style="text-transform: lowercase;">Email: vknrlson@vkendra.org</a> -->
 							<a href="#"><i class="flaticon-phone"></i>+91-94356 52161</a>
 							<a href="#" style="text-transform: lowercase;">Email: vknrlns22@gmail.com</a>
-							<a href="{{route("student.login")}}" class="register_icon"><i class="ti-arrow-right"></i>Login</a>
-							<a href="{{route("student.register")}}" class="register_icon"><i class="ti-arrow-right"></i>Register</a>
+						</div>
+					</div>
+					<div class="col-md-8 col-xl-12">
+						<div class="sub_header_social_icon float-right">
+							{{-- <a href="{{route("student.login",['who'=>Crypt::encrypt('student')])}}" class="register_icon"><i class="ti-arrow-right"></i>Login</a> --}}
+							{{-- <a href="{{route("student.register",['who'=>Crypt::encrypt('nurs')])}}" class="register_icon"><i class="ti-arrow-right"></i>Register</a> --}}
+							<a href="{{route("student.login",['who'=>Crypt::encrypt('conference')])}}" class="register_icon"><i class="ti-arrow-right"></i>Login</a>
+							<a href="{{route("student.register",['who'=>Crypt::encrypt('conf')])}}" class="register_icon"><i class="ti-arrow-right"></i>registration for Regional Conference</a>
 						</div>
 					</div>
 				</div>

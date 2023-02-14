@@ -16,7 +16,7 @@
                         </svg>
                     </i>
                     <span>Existing user login here</span>
-                    <form class="" method="POST" action="{{ route('student.login') }}"
+                    <form class="" method="POST" action="{{ route('student.login',['who'=>$who]) }}"
                         autocomplete="off" onsubmit="return LoginEncrypter(this)">
                         <input autocomplete="off" name="hidden" type="text" style="display:none;">
                         {{ csrf_field() }}

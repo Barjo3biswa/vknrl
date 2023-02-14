@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Session;
 
 class LoginController extends Controller
@@ -44,9 +45,10 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function showLoginForm()
+    public function showLoginForm(Request $request)
     {
-        return view('student.auth.login');
+        $who=$request->who;
+        return view('student.auth.login',compact('who'));
     }
      /**
      * Validate the user login request.
@@ -74,12 +76,19 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
+        // dd($request->all());
+        $login_as= Crypt::decrypt($request->who);
+       
+        
+
+
         $passphrase = (Session::has("admin_login_crypt") ? Session::get("admin_login_crypt") : null);
         $password = cryptoJsAesDecrypt($passphrase, $request->password);
         $request->merge(["password" => $password]);
-        // dump($password);
+        $request->merge(["category" => $login_as]);
+        // dd($login_as);
         // dump($request->session());
-        // dd($request->all());
+        //dd($request->all());
         $this->validateLogin($request);
 
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
@@ -87,19 +96,23 @@ class LoginController extends Controller
         // the IP address of the client making these requests into this application.
         if ($this->hasTooManyLoginAttempts($request)) {
             $this->fireLockoutEvent($request);
-
             return $this->sendLockoutResponse($request);
         }
+        // dd($this->attemptLogin($request));
 
         if ($this->attemptLogin($request)) {
             return $this->sendLoginResponse($request);
         }
-
         // If the login attempt was unsuccessful we will increment the number of attempts
         // to login and redirect the user back to the login form. Of course, when this
         // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
 
         return $this->sendFailedLoginResponse($request);
+    }
+
+    protected function credentials(Request $request)
+    {
+        return $request->only($this->username(), 'password','category');
     }
 }

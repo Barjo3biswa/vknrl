@@ -18,7 +18,7 @@
                         </svg>
                     </i>
                     <span>New user register here</span>
-                    <form class="" method="POST" action="{{ route('student.register') }}"
+                    <form class="" method="POST" action="{{ route('student.register',['who'=>$who]) }}"
                         style="padding-right:35px; padding-left:20px;" autocomplete="off" onsubmit="return LoginEncrypter();">
                         {{ csrf_field() }}
 

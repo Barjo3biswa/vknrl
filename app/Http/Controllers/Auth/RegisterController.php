@@ -10,7 +10,10 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Support\Facades\Crypt;
 use Session;
+use Illuminate\Validation\Rules\Unique;
 
 class RegisterController extends Controller
 {
@@ -44,9 +47,10 @@ class RegisterController extends Controller
         $this->middleware(['guest', "admissionController"]);
     }
     
-    public function showRegistrationForm()
+    public function showRegistrationForm(Request $request)
     {
-        return view('student.auth.register');
+        $who=$request->who;
+        return view('student.auth.register',compact('who'));
     }
 
     /**
@@ -59,8 +63,54 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'mobile_no' => 'required|digits:10|unique:users,mobile_no',
+            // 'email' => 'required|string|email|max:255|unique:users',
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                (new Unique('users', 'email'))->where(function ($query) {
+                    return $query->where('category', 'student');
+                }),
+            ],
+            // 'mobile_no' => 'required|digits:10|unique:users,mobile_no',
+            'mobile_no' => [
+                'required',
+                'digits:10',
+                (new Unique('users', 'mobile_no'))->where(function ($query) {
+                    return $query->where('category', 'student');
+                }),
+            ],
+            'password' => 'required|string|min:8|confirmed|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%@]).*$/',
+            'captcha' => 'required|captcha',
+        ],[
+            "regex" => "The :attribute must be at least 8 characters long, contain at least one number, one special character and have a mixture of uppercase and lowercase letters."
+        ]);
+    }
+
+    protected function validatorConf(array $data)
+    {
+        return Validator::make($data, [
+            'name' => 'required|string|max:255',
+            // 'email' => 'required|string|email|max:255|unique:users',
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                (new Unique('users', 'email'))->where(function ($query) {
+                    return $query->where('category', 'conference');
+                }),
+            ],
+            // 'mobile_no' => 'required|digits:10|unique:users,mobile_no',
+            'mobile_no' => [
+                'required',
+                'digits:10',
+                (new Unique('users', 'mobile_no'))->where(function ($query) {
+                    return $query->where('category', 'conference');
+                }),
+            ],
+            
             'password' => 'required|string|min:8|confirmed|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%@]).*$/',
             'captcha' => 'required|captcha',
         ],[
@@ -76,6 +126,13 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $cate = Crypt::decrypt($data['who']);
+        if($cate=='conf'){
+            $category='conference';
+        }else{
+            $category='student';
+        }
+       
         $session=\DB::table('sessions')->where('is_active',1)->first();
         // dd($session);
         if (User::count() == 0) {
@@ -87,6 +144,15 @@ class RegisterController extends Controller
         $tempid='1207161519784471974';
         $message = $otp . " is your OTP. VKNRL";
         sendSMS($data['mobile_no'], $message,$tempid);
+        // dd([
+        //     'name' => $data['name'],
+        //     'email' => $data['email'],
+        //     'mobile_no' => $data['mobile_no'],
+        //     'password' => bcrypt($data['password']),
+        //     'otp'    => $otp,
+        //     'session_id' => $session->id,
+        //     'category'   => $category, 
+        // ]);
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -94,6 +160,7 @@ class RegisterController extends Controller
             'password' => bcrypt($data['password']),
             'otp'    => $otp,
             'session_id' => $session->id,
+            'category'   => $category,
         ]);
     }
     
@@ -106,6 +173,11 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
+        try {
+            $decrypted = Crypt::decrypt($request->who);
+        } catch (\Exception $e) {
+           return redirect()->back()->with('error','Something went wrong'); 
+        }
         $password                = base64_decode($request->password);
         $password_confirmation   = base64_decode($request->password_confirmation);
         $passphrase = (Session::has("admin_login_crypt") ? Session::get("admin_login_crypt") : null);
@@ -113,7 +185,12 @@ class RegisterController extends Controller
         $password_confirmation = cryptoJsAesDecrypt($passphrase, $password_confirmation);
         $request->merge(["password" => $password]);
         $request->merge(["password_confirmation" => $password_confirmation]);
-        $this->validator($request->all())->validate();
+        if($decrypted=='conf'){
+            $this->validatorConf($request->all())->validate();
+        }else{
+            $this->validator($request->all())->validate();
+        }
+        
 
         event(new Registered($user = $this->create($request->all())));
 

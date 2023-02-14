@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', "mobile_no",'otp_verified', "otp_verified_at", "otp","session_id"
+        'name', 'email', 'password', "mobile_no",'otp_verified', "otp_verified_at", "otp","session_id","category"
     ];
     public static $otp_retry_limit = 3;
 

@@ -136,32 +136,36 @@
 @endsection
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-default">
-            <div class="panel-heading">Welcome to VKNRL Admission Portal 
-                @if(!getActiveSessionApplication())
-                <span class="pull-right"><a href="{{route("student.application.create")}}"><button
-                            class="btn btn-sm btn-primary"> Apply New Application</button></a></span>
-                @endif
-            </div>
+        @if (auth()->user()->category=='student')
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                <div class="panel-heading">Welcome to VKNRL Admission Portal 
+                    @if(!getActiveSessionApplication())
+                    <span class="pull-right"><a href="{{route("student.application.create")}}"><button
+                                class="btn btn-sm btn-primary"> Apply New Application</button></a></span>
+                    @endif
+                </div>
 
-                <div class="panel-body">
-                    <!-- another version - flat style with animated hover effect -->
-                    {{-- <div class="breadcrumb flat">
-                        <a href="#" class="active">Browse</a>
-                        <a href="#">Compare</a>
-                        <a href="#">Order Confirmation</a>
-                        <a href="#">Checkout</a>
-                    </div> --}}
+                    <div class="panel-body">
+                        <!-- another version - flat style with animated hover effect -->
+                        {{-- <div class="breadcrumb flat">
+                            <a href="#" class="active">Browse</a>
+                            <a href="#">Compare</a>
+                            <a href="#">Order Confirmation</a>
+                            <a href="#">Checkout</a>
+                        </div> --}}
 
-                    <!-- Prefixfree -->
-                    {{-- <script src="http://thecodeplayer.com/uploads/js/prefixfree-1.0.7.js" type="text/javascript"
-                        type="text/javascript"></script> --}}
-                    <p>You are logged in!</p>
-                    @include('common.application.index')
+                        <!-- Prefixfree -->
+                        {{-- <script src="http://thecodeplayer.com/uploads/js/prefixfree-1.0.7.js" type="text/javascript"
+                            type="text/javascript"></script> --}}
+                        <p>You are logged in!</p>
+                        @include('common.application.index')
+                    </div>
                 </div>
             </div>
-        </div>
+        @else
+            @include('common.conference.index')
+        @endif
     </div>
 </div>
 @endsection

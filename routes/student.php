@@ -23,6 +23,13 @@ Route::group(["middleware" => "otp"], function(){
         Route::group(['prefix' => 'admit-card'], function () {
             Route::get('download/{application_id}', ["uses" => "Student\ApplicationController@downloadAdmitCard", "as" => "admit-card.download"]);
         });
+
+        Route::post("/conferense-save", ["uses" => "Conference\ConferenceController@save", "as" => "application.conferense.save"]);
+        
+        Route::get("/conferense-payment/{id}", ["uses" => "Conference\ConferenceController@payment", "as" => "application.conferense.payment"]);
+        Route::post("/conferense-payment-post/{id}", ["uses" => "Conference\ConferenceController@paymentPost", "as" => "application.conferense.payment-post"]);
     });
 });
+
+
 
