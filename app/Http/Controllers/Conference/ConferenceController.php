@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\OnlinePaymentProcessing;
 use App\Models\OnlinePaymentSuccess;
+use App\Models\Session;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
@@ -30,9 +31,10 @@ class ConferenceController extends Controller
         ]);
         DB::beginTransaction();
         try{
-            
+            $session=Session::where('is_active',1)->first();
             Conference::create([
                 'user_id'            => auth()->user()->id,
+                'session_id'         => $session->id,
                 'first_name'         => $request->f_name,	
                 'middle_name'        => $request->m_name??null,	
                 'last_name'	         => $request->l_name,
@@ -108,12 +110,11 @@ class ConferenceController extends Controller
                        ]);
                        $online_payment->tried_process()->update(['payment_done' => 1, "online_payment_successes_id" => $online_payment->id]);
                    }
-                   $application->payment_status = 1;
-                   $application->status = "payment_done";
+                   //    $application->payment_status = 1;
+                   $application->form_step = "payment_done";
                    $application->save();
                    DB::commit();
-                   $this->sendApplicationNoSMS($application);
-                   return redirect()->route($this->getIndexView())->with("success", "Your Payment is already done.");
+                   return redirect()->route('student.home')->with("success", "Your Payment is already done.");
                }
            }
            // check order if already payment
@@ -150,7 +151,6 @@ class ConferenceController extends Controller
                    'color' => '#2E86C1'
                ]
            ];
-           // $json = json_encode($data);
        }catch(\Exception $e){
            dd($e);
            \Log::error($e);
@@ -171,7 +171,6 @@ class ConferenceController extends Controller
        DB::commit();
        saveLogs(auth(get_guard())->id(), auth(get_guard())->user()->name, get_guard(), "Proceeding for payment Application No: {$application->id}");
        $application = Conference::find($decrypted);
-    //    dd($application);
        return view("common.conference.process-payment", compact("application", "order", "client","data", "amount", "merchantOrderID"));
        
     }
@@ -226,6 +225,7 @@ class ConferenceController extends Controller
             ]);
             $online_payment->tried_process()->update(['payment_done' => 1, "online_payment_successes_id" => $online_payment->id]);
             $sl=Conference::where('form_step','payment_done')->count();
+            $sl=$sl+1;
             $application->registration_no = 'VKNRL-CONF-2023-00'.$sl;
             $application->form_step = "payment_done";
             $application->save();
@@ -235,72 +235,6 @@ class ConferenceController extends Controller
             return redirect()->back()->with("error", "Something went wrong. Please try again later.");
         }
         DB::commit();
-        $this->sendApplicationNoSMS($application);
-        return redirect()->back()->with("success", "Payment Succssfull.");
+        return redirect()->route('student.home')->with("success", "Payment Succssfull.");
     }
-    
-
-
-    // public function paymentRecieved(Request $request, $encrypted_id) {
-    //     $accessId = env("PAYMENT_ACCESS_ID");
-    //     $secretKey = env("PAYMENT_SECRET_KEY");
-    //     $merchantOrderID = env("MERCHANT_ORDER_ID", uniqid());
-    //     Log::notice(json_encode($request->all()));
-    //     try {
-    //         $decrypted_id = Crypt::decrypt($encrypted_id);
-    //     } catch (Exception $e) {
-    //         // dd($e);
-    //         Log::emergency($e);
-    //         return redirect()->route('student.application.index')->with("error", "Whoops! Something went wrong.");
-    //     }
-    //     try {
-    //         $api = new Api($accessId, $secretKey);
-            
-    //         $api->utility->verifyPaymentSignature([
-    //             'razorpay_payment_id'    => $request->get("payment_id"),
-    //             'razorpay_order_id'      => $request->get("order_id"),
-    //             'razorpay_signature' => $request->get("payment_signature"),
-    //         ]);
-    //         $payment = $api->payment->fetch($request->get("payment_id"));
-    //     } catch (Exception $e) {
-    //         Log::emergency($e);
-    //         return redirect()->route("student.application.index")->with("error", "Payment Details fetching error. Wait sometimes or contact to helpline no.");
-    //     }
-    //     // dd($payment);
-    //     DB::beginTransaction();
-    //     try {
-    //         $application = Application::findOrFail($decrypted_id);
-    //         // Application id from application_id , student_id is just passed so not taken.
-    //         $online_payment = OnlinePaymentSuccess::create([
-    //             "application_id"    => $application->id,
-    //             "student_id"        => $application->student_id,
-    //             "order_id"          => $request->get("order_id"),
-    //             "amount"            => $request->get("amount"),
-    //             "amount_in_paise"   => ($request->get("amount") * 100),
-    //             "response_amount"   => $payment->amount,
-    //             "currency"          => $payment->currency,
-    //             "merchant_order_id" => $request->get("merchant_order_id"),
-    //             "payment_id"        => $request->get("payment_id"),
-    //             "payment_signature" => $request->get("payment_signature"),
-    //             "is_error"          => $request->get("is_error"),
-    //             "error_message"     => $request->get("error_message"),
-    //             "biller_status"          => $payment->status,
-    //             "biller_response"          => $request->get("response"),
-    //             "status"          => 1,
-    //         ]);
-    //         $online_payment->tried_process()->update(['payment_done' => 1, "online_payment_successes_id" => $online_payment->id]);
-    //         if($payment->status == "captured"){
-    //             $application->payment_status = 1;
-    //         }
-    //         $application->status = "payment_done";
-    //         $application->save();
-    //     } catch (Exception $e) {
-    //         DB::rollback();
-    //         Log::emergency($e);
-    //         return redirect()->route("student.application.index")->with("error", "Something went wrong. Please try again later.");
-    //     }
-    //     DB::commit();
-    //     $this->sendApplicationNoSMS($application);
-    //     return redirect()->route("student.application.payment-reciept", Crypt::encrypt($application->id))->with("success", "Payment Succssfull.");
-    // }
 }

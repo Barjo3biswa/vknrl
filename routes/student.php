@@ -28,6 +28,9 @@ Route::group(["middleware" => "otp"], function(){
         
         Route::get("/conferense-payment/{id}", ["uses" => "Conference\ConferenceController@payment", "as" => "application.conferense.payment"]);
         Route::post("/conferense-payment-post/{id}", ["uses" => "Conference\ConferenceController@paymentPost", "as" => "application.conferense.payment-post"]);
+
+        // Route::post("/payment-complete", ["uses" => "HomeController@index", "as" => "application.payment-complete"]);
+
     });
 });
 

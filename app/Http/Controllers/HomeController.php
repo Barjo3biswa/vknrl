@@ -26,6 +26,7 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
+        // dd("ok");
         $application = Application::with("caste", "attachments", "student", "admit_card_published");
         if (auth("student")->check()) {
             $applications = $application->where("student_id", auth("student")->id());

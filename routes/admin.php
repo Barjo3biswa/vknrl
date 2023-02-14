@@ -36,6 +36,12 @@ Route::get('/home', function () {
             Route::post("send", ["uses" => "Admin\ApplicationController@sendSMS", "as" => "sms.send"]);
         });
     });
+
+    
+    Route::get("conference/list", ["uses" => "Admin\AdminController@conferenceList", "as" =>"conference.list"]);
+
+
+
 Route::resource("exam-center", "Admin\ExamCenterController", ["except" => ["show"]]);
 Route::resource("admit-card", "Admin\AdmitCardController",["except" => ["destroy", "edit"]]);
 Route::group(["prefix" => "admit-card"], function(){

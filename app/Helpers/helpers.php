@@ -1,5 +1,6 @@
 <?php
 
+use App\Conference;
 use App\Models\Session;
 
 function asset_public($path, $secure = null)
@@ -131,13 +132,24 @@ function getCorrespondencePermanentAddress($application)
 function totalRegisterdUser()
 {
     $session=Session::where('is_active',1)->first();
-    return \App\Models\User::where('session_id',$session->id)->count();
+    return \App\Models\User::where(['session_id'=>$session->id,'category'=>'student'])->count();
+}
+function totalRegisterdUserConf()
+{
+    $session=Session::where('is_active',1)->first();
+    return \App\Models\User::where(['session_id'=>$session->id,'category'=>'conference'])->count();
 }
 function getTotalApplicationCount()
 {
     $session=Session::where('is_active',1)->first();
     $statuses = \App\Models\Application::$statuses_for_admin;
     return \App\Models\Application::whereIn("status", $statuses)->where('session_id',$session->id)->count();
+}
+function getTotalApplicationCountConf()
+{
+    $session=Session::where('is_active',1)->first();
+    // $statuses = \App\Models\Application::$statuses_for_admin;
+    return \App\Conference::where("form_step", 'payment_done')->where('session_id',$session->id)->count();
 }
 function applicatinEditPermission($application)
 {

@@ -16,7 +16,6 @@ trait VknrlPayment
 {
     // payment processing
     public function processPayment(Request $request, $encrypted_id) {
-        dd("ok");
         try {
             $decrypted_id = Crypt::decrypt($encrypted_id);
         } catch (Exception $e) {
