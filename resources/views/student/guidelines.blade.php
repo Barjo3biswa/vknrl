@@ -279,7 +279,16 @@ How to Fill In The Application Form:
         </ol>
     </div>
 </div> --}}
-<div class="banner_text">
+
+
+
+
+
+
+
+
+
+{{-- <div class="banner_text">
     <br />
     <h1>
         <br />
@@ -287,4 +296,4 @@ How to Fill In The Application Form:
     <p> Please read the guidelines before filling up your online application form at the website
         www.vknrlnursingschool.edu.in</p>
     <a href="{{asset_public("notifications-22-23/Prospectus_GNM_session_2022_23.pdf")}}"  target="_blank" class="btn_1"> Download Prospectus <span class="ti-angle-right"></span> </a>
-</div>
+</div> --}}

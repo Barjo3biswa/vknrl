@@ -8,9 +8,9 @@
                 <div class="banner_text">
                     <h1><span>Welcome</span><br>
                         VKNRL SCHOOL OF NURSING</h1>
-                    <p> Please read the guidelines before filling up your online application form at the website
+                    {{-- <p> Please read the guidelines before filling up your online application form at the website
                         www.vknrlnursingschool.edu.in</p>
-                    <a href="{{asset_public("notifications-22-23/Prospectus_GNM_session_2022_23.pdf")}}" target="_blank" class="btn_1"> Download Prospectus <span class="ti-angle-right"></span> </a>
+                    <a href="{{asset_public("notifications-22-23/Prospectus_GNM_session_2022_23.pdf")}}" target="_blank" class="btn_1"> Download Prospectus <span class="ti-angle-right"></span> </a> --}}
                 </div>
             </div>
 
@@ -40,7 +40,14 @@
                         {{-- <li><a href="{{asset_public("Advertisement of admission 2019-20.pdf")}}" target="_blank"> Online Admission for GNM Advertise link. </a> </li> --}}
 
                         {{--The notice section for 2022-23 starts here --}}
-                        <li><a href="{{asset_public("notifications-22-23/Notice_for_Counselling_cum_Admission_into_GNM_Session_2022-23.pdf")}}" target="_blank"> Notice for Counselling cum Admission into GNM Session 2022-23<span class="new-tag"> New</span></a> </li>  
+
+
+
+
+
+
+
+                        {{-- <li><a href="{{asset_public("notifications-22-23/Notice_for_Counselling_cum_Admission_into_GNM_Session_2022-23.pdf")}}" target="_blank"> Notice for Counselling cum Admission into GNM Session 2022-23<span class="new-tag"> New</span></a> </li>  
                         <li><a href="{{asset_public("notifications-22-23/Provisional_Merit_Wait_List_for_GNM_Admission_2022-23.pdf")}}" target="_blank"> Provisional Merit & Wait List for GNM Admission 2022-23<span class="new-tag"> New</span></a> </li>  
 
 
@@ -49,7 +56,15 @@
 
                         <li><a href="{{asset_public("notifications-22-23/notice_entrance-exam-gnm.pdf")}}" target="_blank"> Notice for Entrance Examination of GNM Session 2022-23</a> </li>  
 
-                        <li><a href="{{asset_public("notifications-22-23/Admission-Notice-2022-23.jpeg")}}" target="_blank"> Admission Notice 2022-23</a> </li>                      
+                        <li><a href="{{asset_public("notifications-22-23/Admission-Notice-2022-23.jpeg")}}" target="_blank"> Admission Notice 2022-23</a> </li>    --}}
+
+
+
+
+
+
+
+
                         {{-- <li><a href="{{asset_public("notifications-22-23/Eligibility-Criteria-for-Admission-into-GNM-Course-2022.pdf")}}" target="_blank"> Eligibility criteria and admission procedure. </a> </li>
                         <li><a href="{{asset_public("notifications-22-23/Instruction-for-Applicant.pdf")}}"> Instruction for applicant. </a> </li>
 
