@@ -226,7 +226,8 @@ class ConferenceController extends Controller
             $online_payment->tried_process()->update(['payment_done' => 1, "online_payment_successes_id" => $online_payment->id]);
             $sl=Conference::where('form_step','payment_done')->count();
             $sl=$sl+1;
-            $application->registration_no = 'VKNRL-CONF-2023-00'.$sl;
+            // $application->registration_no = 'VKNRL-CONF-2023-00'.$sl;
+            $application->registration_no = 'VKNRL-CONF-2023-' . str_pad($sl, 4, '0', STR_PAD_LEFT);
             $application->form_step = "payment_done";
             $application->save();
         } catch (\Exception $e) {
