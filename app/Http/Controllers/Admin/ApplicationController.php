@@ -117,4 +117,5 @@ class ApplicationController extends CommonApplicationController
                 ->back()
                 ->with("success", "Message Successfully Sent to {$sent_counter} Applicants and failed {$failed_counter}.");
     }
+
 }

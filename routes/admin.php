@@ -39,6 +39,7 @@ Route::get('/home', function () {
 
     
     Route::get("conference/list", ["uses" => "Admin\AdminController@conferenceList", "as" =>"conference.list"]);
+    Route::get("conference/complete", ["uses" => "Admin\AdminController@ConferenceCompleteList", "as" =>"conference.complete"]);
 
 
 

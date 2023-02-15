@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Conference;
 use Illuminate\Http\Request;
 use App\Http\Controllers\CommonApplicationController;
 use App\Models\User;
@@ -78,5 +79,78 @@ class AdminController extends CommonApplicationController
             "message"   => "Password successfully changed to mobile no.",
             "status"    => true
         ]);
+    }
+
+    public function ConferenceCompleteList(Request $request)
+    {
+        // dd($request->all());
+        $list=Conference::where('form_step','payment_done');
+        if($request->registration_no){
+            $list=$list->where('registration_no',$request->registration_no);
+        }if($request->email){
+            $list=$list->where('email',$request->email);
+        }if($request->mobile_no){
+            $list=$list->where('phone_no',$request->email);
+        }
+        if($request->export_data){
+            return $this->ExportrToExcel($list);
+        }
+        $list=$list->paginate(100);
+        
+        return view('common.conference.conference-list',compact('list'));
+    }
+
+    public function ExportrToExcel($export)
+    {
+
+        $data=[
+            'Registration_no' =>    'registration_no',
+            'First Name'   => 'first_name',
+            'Middle Name'   => 'middle_name',
+            'Last Name'   => 'last_name',
+            'Email'   => 'email',
+            'Phone_no'   => 'phone_no',
+            'Institute Name'   => 'institute_name',
+            'Designation'   => 'designation',
+            'Address'   => 'address',
+            'Scientific Paper'   => 'scientific_paper==1?"Yes":"No"',
+            'Poster Presentaion'   => 'poster_presentaion==1?"Yes":"No"',
+            '9th March'   => 'first_day==1?"Yes":"No"',
+            '10th March'   => 'second_day==1?"Yes":"No"',
+        ];
+
+        $columns=[];
+        $col_relation = [];
+        foreach( $data as $key=>$d){
+            $columns[]=$key;
+            $col_relation[] = $d;
+        }
+        $excel    = $export->get();
+        $fileName = "Itm_list".'.csv';
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0",
+        );
+        $callback = function () use ($excel, $columns,$col_relation) {
+        $file = fopen('php://output', 'w');
+        fputcsv($file, $columns);
+        $count = 0;
+        $array = '';
+        $dynamic_array = [];
+            foreach ($excel as $key=>$task) {
+                foreach($col_relation as $k=>$c){
+                    $val=eval('return $task->'.$c.';')??null;
+                    $dynamic_array[] = $val;
+                }
+                fputcsv($file, $dynamic_array);
+                $dynamic_array = [];
+            }
+            fclose($file);
+        };
+        return response()->stream($callback, 200, $headers);
+    
     }
 }

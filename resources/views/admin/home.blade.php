@@ -67,7 +67,7 @@
                                     <div class="pull-left">
                                         <i class="fa fa-list"></i>
                                     </div>
-                                <div class="pull-right number"><a href="#">{{getTotalApplicationCountConf()}}</a></div>
+                                <div class="pull-right number"><a href="{{route("admin.conference.complete")}}">{{getTotalApplicationCountConf()}}</a></div>
                                 </div>
 
                             </div>
