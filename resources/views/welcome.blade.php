@@ -45,7 +45,7 @@
 
 
 
-                        <li><a href="{{asset_public("notifications-22-23/Regional_Conference_Brochure.pdf")}}" target="_blank"> Regional Conference Brochure 2023<span class="new-tag"> New</span></a> </li> 
+                        <li><a href="{{asset_public("notifications-22-23/1234.pdf")}}" target="_blank"> Regional Conference Brochure 2023<span class="new-tag"> New</span></a> </li> 
 
                         {{-- <li><a href="{{asset_public("notifications-22-23/Notice_for_Counselling_cum_Admission_into_GNM_Session_2022-23.pdf")}}" target="_blank"> Notice for Counselling cum Admission into GNM Session 2022-23<span class="new-tag"> New</span></a> </li>  
                         <li><a href="{{asset_public("notifications-22-23/Provisional_Merit_Wait_List_for_GNM_Admission_2022-23.pdf")}}" target="_blank"> Provisional Merit & Wait List for GNM Admission 2022-23<span class="new-tag"> New</span></a> </li>  
