@@ -202,9 +202,15 @@ class ConferenceController extends Controller
             return redirect()->route("student.application.index")->with("error", "Payment Details fetching error. Wait sometimes or contact to helpline no.");
         }
         // dd($payment);
-        DB::beginTransaction();
-        try {
+        // DB::beginTransaction();
+        // try {
             $application = Conference::findOrFail($decrypted_id);
+            $sl=Conference::where('form_step','payment_done')->count();
+            $sl=$sl+1;
+            // $application->registration_no = 'VKNRL-CONF-2023-00'.$sl;
+            $application->registration_no = 'VKNRL-CONF-2023-' . str_pad($sl, 4, '0', STR_PAD_LEFT);
+            $application->form_step = "payment_done";
+            $application->save();
             // Application id from application_id , student_id is just passed so not taken.
             $online_payment = OnlinePaymentSuccess::create([
                 "application_id"    => $application->id,
@@ -224,18 +230,13 @@ class ConferenceController extends Controller
                 "status"          => 1,
             ]);
             $online_payment->tried_process()->update(['payment_done' => 1, "online_payment_successes_id" => $online_payment->id]);
-            $sl=Conference::where('form_step','payment_done')->count();
-            $sl=$sl+1;
-            // $application->registration_no = 'VKNRL-CONF-2023-00'.$sl;
-            $application->registration_no = 'VKNRL-CONF-2023-' . str_pad($sl, 4, '0', STR_PAD_LEFT);
-            $application->form_step = "payment_done";
-            $application->save();
-        } catch (\Exception $e) {
-            DB::rollback();
-            Log::emergency($e);
-            return redirect()->back()->with("error", "Something went wrong. Please try again later.");
-        }
-        DB::commit();
+            
+        // } catch (\Exception $e) {
+        //     // DB::rollback();
+        //     Log::emergency($e);
+        //     return redirect()->back()->with("error", "Something went wrong. Please try again later.");
+        // }
+        // DB::commit();
         return redirect()->route('student.home')->with("success", "Payment Succssfull.");
     }
 }
